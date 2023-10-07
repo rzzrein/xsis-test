@@ -3,7 +3,7 @@ Movies REST API for **Xsis Mitra Utama** backend developer test.
 Contains common endpoints for CRUD operation through GET, POST, PATCH & DELETE HTTP methods.
 
 ## Installation
-- Make sure java and maven is installed
+- Make sure java, maven & MySQL is installed
 - Navigate to project root
 ### Option 1
 - Run `mvn spring-boot:run`
