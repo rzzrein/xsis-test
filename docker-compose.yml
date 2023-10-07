@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    container_name: mysqldb_movies
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rest_movies
+    networks:
+      springboot-mysql-net:
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysql", "-uroot", "-p$$MYSQL_ROOT_PASSWORD", "--execute", "\"SHOW DATABASES;\"" ]
+      interval: 10s
+      timeout: 4s
+      retries: 3
+
+  springboot:
+    container_name: springboot_movies
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb_movies:3306/rest_movies
+    ports:
+      - "8080:8080"
+    networks:
+      springboot-mysql-net:
+    depends_on:
+      - mysqldb
+    restart: on-failure
+
+volumes:
+  dbdata:
+
+networks:
+  springboot-mysql-net:
