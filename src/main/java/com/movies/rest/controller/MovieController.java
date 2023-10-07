@@ -1,13 +1,14 @@
 package com.movies.rest.controller;
 
 import com.movies.rest.dto.MovieDto;
+import com.movies.rest.dto.PagedMovies;
 import com.movies.rest.service.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
 
 @RestController
 @RequestMapping("/movies")
@@ -24,8 +25,11 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieDto>> getMovie() {
-        return ResponseEntity.ok(movieService.getAllMovies());
+    public ResponseEntity<PagedMovies> getMovie(
+            @RequestParam(value = "p", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "s", defaultValue = "5", required = false) int pageSize
+    ) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return ResponseEntity.ok(movieService.getAllMovies(pageNo, pageSize));
     }
 
     @GetMapping("/{id}")

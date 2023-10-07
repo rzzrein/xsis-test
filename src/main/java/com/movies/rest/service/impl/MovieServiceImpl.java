@@ -1,14 +1,18 @@
 package com.movies.rest.service.impl;
 
 import com.movies.rest.dto.MovieDto;
+import com.movies.rest.dto.PagedMovies;
 import com.movies.rest.entity.Movie;
 import com.movies.rest.exception.ResourceNotFoundException;
 import com.movies.rest.repository.MovieRepository;
 import com.movies.rest.service.MovieService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -27,9 +31,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieDto> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        return movies.stream().map(this::mapToDto).collect(Collectors.toList());
+    public PagedMovies getAllMovies(int pageNo, int pageSize) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Movie> movies = movieRepository.findAll(pageable);
+        return mapToPagedMovies(movies);
     }
 
     @Override
@@ -76,5 +81,18 @@ public class MovieServiceImpl implements MovieService {
         movie.setRating(movieDto.getRating());
         movie.setImage(movieDto.getImage());
         return movie;
+    }
+
+    private PagedMovies mapToPagedMovies(Page<Movie> movies) {
+        List<Movie> moviesList = movies.getContent();
+        List<MovieDto> content =  moviesList.stream().map(this::mapToDto).toList();
+        PagedMovies pagedMovies = new PagedMovies();
+        pagedMovies.setContent(content);
+        pagedMovies.setPageNo(movies.getNumber());
+        pagedMovies.setPageSize(movies.getSize());
+        pagedMovies.setTotalElements(movies.getTotalElements());
+        pagedMovies.setTotalPages(movies.getTotalPages());
+        pagedMovies.setLast(movies.isLast());
+        return pagedMovies;
     }
 }
