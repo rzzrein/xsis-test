@@ -1,5 +1,5 @@
 # Movies REST API Using Spring Boot
-Movies REST API for Xsis Mitra Utama Backend Developer test.
+Movies REST API for **Xsis Mitra Utama** backend developer test.
 Contains common endpoints for CRUD operation through GET, POST, PATCH & DELETE HTTP methods.
 
 ## Installation
@@ -8,7 +8,7 @@ Contains common endpoints for CRUD operation through GET, POST, PATCH & DELETE H
 ### Option 1
 - Run `mvn spring-boot:run`
 ### Option 2
-- Run `mvn clean install`
+- Run `mvn clean package`
 - Run `java -jar target/rest-0.0.1-SNAPSHOT.jar`
 ### Option 3: Docker
 - Make sure docker & docker-compose is installed
